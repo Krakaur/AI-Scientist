@@ -1,10 +1,19 @@
 import json
 import os
 import re
-
+import requests
 import anthropic
 import backoff
 import openai
+
+
+
+
+api_keys = [
+    "sk-123d9358414f4bb58c5117f69e8ace14",
+    "sk-c536af980c414935ae5e5d07710b2b47",
+    "sk-api-key-3"
+]
 
 MAX_NUM_TOKENS = 4096
 
@@ -17,6 +26,7 @@ AVAILABLE_LLMS = [
     "o1-preview-2024-09-12",
     "o1-mini-2024-09-12",
     "deepseek-coder-v2-0724",
+    "deepseek-chat",
     "llama3.1-405b",
     # Anthropic Claude models via Amazon Bedrock
     "bedrock/anthropic.claude-3-sonnet-20240229-v1:0",
@@ -31,6 +41,41 @@ AVAILABLE_LLMS = [
     "vertex_ai/claude-3-sonnet@20240229",
     "vertex_ai/claude-3-haiku@20240307",
 ]
+
+class DeepSeekClient:
+    def __init__(self, api_key):
+        self.api_key = api_key
+        self.url = "https://api.deepseek.com/chat/completions"
+
+    def completions(self, prompt):  # Nota: Este método ahora está correctamente indentado.
+        headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json",
+        }
+        data = {
+            "model": "deepseek-chat",
+            "messages": [
+                {
+                    "role": "system",
+                    "content": (
+                        "You are a highly creative, brilliant, and amazing scientist working at the frontier of science. "
+                        "You have been considering several fascinating ideas in the field of computational sciences. "
+                        "Some of these ideas include proof-of-concept methods, novel ways of applying Bayesian statistics "
+                        "to optimization processes, and other groundbreaking approaches. In your ideas, you carefully "
+                        "consider relevance, novelty, usefulness to the field, and potential benefits."
+                    ),
+                },
+                {"role": "user", "content": prompt},
+            ],
+        }
+        response = requests.post(self.url, headers=headers, json=data)
+        if response.status_code == 200:
+            return response.json()["choices"][0]["message"]["content"]
+        else:
+            raise Exception(f"Error {response.status_code}: {response.text}")
+
+
+
 
 
 # Get N responses from a single message, used for ensembling.
@@ -212,6 +257,16 @@ def get_response_from_llm(
         )
         content = response.choices[0].message.content
         new_msg_history = new_msg_history + [{"role": "assistant", "content": content}]
+
+
+    elif model == "deepseek-chat":
+        new_msg_history = msg_history + [{"role": "user", "content": msg}]
+        response = client.completions(msg)
+        content = response
+        new_msg_history = new_msg_history + [{"role": "assistant", "content": content}]
+
+
+
     elif model == "deepseek-coder-v2-0724":
         new_msg_history = msg_history + [{"role": "user", "content": msg}]
         response = client.chat.completions.create(
@@ -309,11 +364,33 @@ def create_client(model):
             api_key=os.environ["DEEPSEEK_API_KEY"],
             base_url="https://api.deepseek.com"
         ), model
+
     elif model == "llama3.1-405b":
         print(f"Using OpenAI API with {model}.")
         return openai.OpenAI(
             api_key=os.environ["OPENROUTER_API_KEY"],
             base_url="https://openrouter.ai/api/v1"
         ), "meta-llama/llama-3.1-405b-instruct"
+
+
+    elif model == "deepseek-chat":
+        print(f"Using DeepSeek API with {model}.")
+    
+    # Lista de API keys para rotación automática
+    api_keys = [
+        "sk-123d9358414f4bb58c5117f69e8ace14",
+        "sk-c536af980c414935ae5e5d07710b2b47",
+    ]
+
+    # Rotar entre claves en caso de error
+    for api_key_index, api_key in enumerate(api_keys):
+        try:
+            client = DeepSeekClient(api_key=api_key)  # Inicializa el cliente con la API key
+            print(f"Using API key index {api_key_index}")
+            return client, model
+        except Exception as e:
+            print(f"Failed with API key index {api_key_index}: {e}")
+            if api_key_index == len(api_keys) - 1:  # Última clave
+                raise Exception("All API keys exhausted. Cannot proceed.")
     else:
         raise ValueError(f"Model {model} not supported.")

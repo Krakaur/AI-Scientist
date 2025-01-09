@@ -8,10 +8,14 @@ import shutil
 import sys
 import time
 import torch
+
+import requests
+
 from aider.coders import Coder
 from aider.io import InputOutput
 from aider.models import Model
 from datetime import datetime
+from ai_scientist.llm import DeepSeekClient
 
 from ai_scientist.generate_ideas import generate_ideas, check_idea_novelty
 from ai_scientist.llm import create_client, AVAILABLE_LLMS
@@ -48,7 +52,7 @@ def parse_arguments():
     parser.add_argument(
         "--model",
         type=str,
-        default="claude-3-5-sonnet-20240620",
+        default="deepseek-chat",
         choices=AVAILABLE_LLMS,
         help="Model to use for AI Scientist.",
     )
@@ -77,11 +81,19 @@ def parse_arguments():
         help="Comma-separated list of GPU IDs to use (e.g., '0,1,2'). If not specified, all available GPUs will be used.",
     )
     parser.add_argument(
-        "--num-ideas",
+    "--num-ideas",
+    type=int,
+    default=int(input("Enter the number of ideas to generate: ")),
+    help="Number of ideas to generate",
+)
+
+    parser.add_argument(
+        "--num-iterations",
         type=int,
-        default=50,
-        help="Number of ideas to generate",
+        default=int(input("Enter the number of iterations per idea: ")),
+        help="Number of iterations per idea",
     )
+
     return parser.parse_args()
 
 
@@ -302,28 +314,35 @@ if __name__ == "__main__":
 
     base_dir = osp.join("templates", args.experiment)
     results_dir = osp.join("results", args.experiment)
+   
+    # Generar ideas usando el cliente ya creado
+
     ideas = generate_ideas(
         base_dir,
-        client=client,
+        client=client,  
         model=client_model,
         skip_generation=args.skip_idea_generation,
         max_num_generations=args.num_ideas,
         num_reflections=NUM_REFLECTIONS,
     )
+
+    # Verificar la novedad de las ideas
     ideas = check_idea_novelty(
         ideas,
         base_dir=base_dir,
-        client=client,
+        client=client,  
         model=client_model,
     )
 
-    with open(osp.join(base_dir, "ideas.json"), "w") as f:
+
+
+with open(osp.join(base_dir, "ideas.json"), "w") as f:
         json.dump(ideas, f, indent=4)
 
-    novel_ideas = [idea for idea in ideas if idea["novel"]]
+novel_ideas = [idea for idea in ideas if idea["novel"]]
     # novel_ideas = list(reversed(novel_ideas))
 
-    if args.parallel > 0:
+if args.parallel > 0:
         print(f"Running {args.parallel} parallel processes")
         queue = multiprocessing.Queue()
         for idea in novel_ideas:
@@ -358,7 +377,7 @@ if __name__ == "__main__":
             p.join()
 
         print("All parallel processes completed.")
-    else:
+else:
         for idea in novel_ideas:
             print(f"Processing idea: {idea['Name']}")
             try:
@@ -376,4 +395,4 @@ if __name__ == "__main__":
             except Exception as e:
                 print(f"Failed to evaluate idea {idea['Name']}: {str(e)}")
 
-    print("All ideas evaluated.")
+print("All ideas evaluated.")

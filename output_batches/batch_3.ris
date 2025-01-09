@@ -1,0 +1,42 @@
+TY  - JOUR
+AB  - The concept of sustainability is nowadays employed to compare manufacturing processes or to define the correct path for material selection. Sometimes, this concept is only partially defined, including just low costs, profit maximization and/or CO2 emission reduction. Actually, a process or material can be defined as sustainable only if an objective function related to the economic, environmental and social impacts is simultaneously maximized. To this aim, it is necessary to define appropriate and specific sustainability indicators (i.e., values related to the economic, social and environmental aspects of a process or material under analysis). These indicators come about from simple calculations, and they are defined in terms of percentages and represented and compared using radar diagrams. Then, a process or specific material is identified by an objective function (i.e., the area included by the polygon that links the scores reported on the diagram). The scope of this representation of data is to individuate the major weaknesses of the process/material, proposing methods of optimization and trying to maximize the objective function in the retrieved diagram. This work aims to propose a general and simple method to calculate sustainability indicators on the basis of specific definitions related to a given process/material. To highlight the potential of this calculation and comparison instrument, two case studies are proposed: the first aims at comparing processes for the production of energy, while the second aims at driving the choice of manufacturing material. The selected indicators and adopted algorithm allowed for the identification of hydroelectric and eolic as the most sustainable processes for energy production; for materials, the results strictly depended on the assumptions made regarding favorable mechanical properties.
+AU  - Trucillo, Paolo
+AU  - Erto, Alessandro
+DA  - 2023/4//
+DO  - 10.3390/su15086689
+IS  - 8
+KW  - energy process evaluation
+KW  - environmental impact
+KW  - material selection
+KW  - profit
+KW  - social impact
+KW  - sustainability
+PB  - MDPI
+PY  - 2023
+TI  - Sustainability Indicators for Materials and Processes
+T2  - Sustainability (Switzerland)
+VL  - 15
+ER  -
+TY  - JOUR
+AB  - Despite the frequent association of circular economy (CE) with sustainability, most CE practices have yet to prove they actually contribute to achieving the Sustainable Development Goals (SDGs), and social aspects in particular. To attain the consensually established targets in the SDG framework, it is vital to assess the impact of CE practices. As most of these practices are carried out in a network of actors, sustainability assessment approaches from the fields of industrial ecology and supply chain management are particularly suitable. However, both fields are known for their limited inclusion of the social dimension. While scholars have already started to explore the assessment of social sustainability within the context of CE practices, little is known about the perspectives and experiences concerning social assessment of businesses actively involved with CE. Thus, the authors conducted 43 semi-structured interviews with frontrunner companies engaged with CE in Italy and the Netherlands to obtain a better picture of (1) how these firms view the importance of the social dimension as part of the assessment of CE practices, (2) what the barriers to conducting social assessment are, and (3) whether they have experience with assessing social sustainability aspects within their companies and supply chains. Through a thematic analysis, it was found that most companies deem the social dimension to be relevant to CE assessment and either consider it an integral part of CE or of sustainability. However, a majority of the firms did not conduct any type of social assessment. Most companies which implemented assessments did so in a qualitative manner or used industry-based sustainability indicator frameworks. Notwithstanding the prevalence of social life cycle assessment in the academic realm, almost all interviewees mentioned barriers to its application related to its complexity and the lack of a standardised approach.
+AU  - Walker, Anna M.
+AU  - Opferkuch, Katelin
+AU  - Roos Lindgreen, Erik
+AU  - Simboli, Alberto
+AU  - Vermeulen, Walter J.V.
+AU  - Raggi, Andrea
+DA  - 2021/7//
+DO  - 10.1016/j.spc.2021.01.030
+KW  - Circular economy
+KW  - Interviews
+KW  - Qualitative research
+KW  - Social life cycle assessment
+KW  - Social sustainability
+PB  - Elsevier B.V.
+PY  - 2021
+SP  - 831
+EP  - 844
+TI  - Assessing the social sustainability of circular economy practices: Industry perspectives from Italy and the Netherlands
+T2  - Sustainable Production and Consumption
+VL  - 27
+ER  -

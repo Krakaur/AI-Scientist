@@ -273,6 +273,11 @@ Scores of 0 indicate the idea failed either during experimentation, writeup or r
 
 
 def on_backoff(details):
+        # Incrementar el tiempo de espera con base en el número de intentos
+    base_wait = 2  # Tiempo inicial en segundos
+    increment = 1  # Incremento por intento fallido
+    wait_time = base_wait + (details['tries'] - 1) * increment
+
     print(
         f"Backing off {details['wait']:0.1f} seconds after {details['tries']} tries "
         f"calling function {details['target'].__name__} at {time.strftime('%X')}"
