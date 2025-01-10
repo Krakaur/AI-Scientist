@@ -12,17 +12,20 @@ from aider.coders import Coder
 from aider.io import InputOutput
 from aider.models import Model
 from datetime import datetime
-
 from ai_scientist.generate_ideas import generate_ideas, check_idea_novelty
 from ai_scientist.llm import create_client, AVAILABLE_LLMS
 
-import os
+
 from transformers import pipeline
 """from ris_utils import load_reference"""
 from ris_utils import extract_metadata_from_ris
 
+# Cargar el token desde config.json
+with open("config.json", "r") as f:
+    config = json.load(f)
 
-os.environ["HF_API_TOKEN"] = "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"
+# Establecer el token de Hugging Face como variable de entorno
+os.environ["HF_API_TOKEN"] = config.get("hf_api_token")
 
 NUM_REFLECTIONS = 3
 
@@ -40,8 +43,6 @@ def parse_arguments():
         help="Modelo LLM para evaluar referencias.",
     )
     return parser.parse_args()
-
-
 
 def get_available_gpus(gpu_ids=None):
     if gpu_ids is not None:

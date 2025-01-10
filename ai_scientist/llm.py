@@ -6,15 +6,6 @@ import anthropic
 import backoff
 import openai
 
-
-
-
-api_keys = [
-    "sk-123d9358414f4bb58c5117f69e8ace14",
-    "sk-c536af980c414935ae5e5d07710b2b47",
-    "sk-api-key-3"
-]
-
 MAX_NUM_TOKENS = 4096
 
 AVAILABLE_LLMS = [
@@ -373,14 +364,15 @@ def create_client(model):
         ), "meta-llama/llama-3.1-405b-instruct"
 
 
+
+
     elif model == "deepseek-chat":
         print(f"Using DeepSeek API with {model}.")
-    
-    # Lista de API keys para rotación automática
-    api_keys = [
-        "sk-123d9358414f4bb58c5117f69e8ace14",
-        "sk-c536af980c414935ae5e5d07710b2b47",
-    ]
+
+    # Cargar claves API desde config.json
+    with open("config.json", "r") as f:
+        config = json.load(f)
+    api_keys = config.get("api_keys", [])
 
     # Rotar entre claves en caso de error
     for api_key_index, api_key in enumerate(api_keys):
@@ -392,5 +384,4 @@ def create_client(model):
             print(f"Failed with API key index {api_key_index}: {e}")
             if api_key_index == len(api_keys) - 1:  # Última clave
                 raise Exception("All API keys exhausted. Cannot proceed.")
-    else:
-        raise ValueError(f"Model {model} not supported.")
+
